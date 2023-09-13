@@ -2,6 +2,8 @@ const httpConstants = require('http2').constants;
 const bcrypt = require('bcrypt');
 const escape = require('escape-html');
 const User = require('../models/user');
+const Conflict = require('../Errors/Conflict');
+const BadRequest = require('../Errors/BadRequest.js');
 
 module.exports.getMyInfo = (req, res) => {
   res.send({ message: 'info sent' });
@@ -17,7 +19,7 @@ module.exports.createUser = (req, res, next) => {
 
   bcrypt.hash(password, 16).then((hash) => {
     User.create({
-      name: name && escape(name),
+      name: name ? name && escape(name) : email,
       email,
       password: hash,
     })

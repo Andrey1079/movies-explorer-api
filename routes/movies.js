@@ -1,12 +1,27 @@
 const router = require('express').Router();
-const { ceelbrate, Joi, celebrate } = require('celebrate');
+const { Joi, celebrate } = require('celebrate');
 const { getAllMovies, createMovie, deleteMovie } = require('../controllers/movies');
+const urlPattern = require('../variables/urlPattern');
 
 router.get('/', getAllMovies);
-router.post('/', celebrate({
-  body:Joi.object().keys({
-   country:
-  })
-}), createMovie);
+router.post(
+  '/',
+  celebrate({
+    body: Joi.object().keys({
+      country: Joi.string().min(3).required(),
+      director: Joi.string().min(2).required(),
+      duration: Joi.number().required(),
+      year: Joi.string().min(4).required(),
+      description: Joi.string().min(10).required(),
+      image: Joi.string().pattern(urlPattern).required(),
+      trilerLink: Joi.string().pattern(urlPattern).required(),
+      thumbnail: Joi.string().pattern(urlPattern).required(),
+      movieId: Joi.number().required(),
+      nameRU: Joi.string().min(2).required(),
+      nameEN: Joi.string().min(2).required(),
+    }),
+  }),
+  createMovie,
+);
 router.delete('/:id', deleteMovie);
 module.exports = router;

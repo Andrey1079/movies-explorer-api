@@ -12,6 +12,7 @@ const movieSchema = new mongoose.Schema(
     director: {
       type: String,
       required: [true, `"Режиссер" ${badRequestMessages.required}`],
+      minlength: [2, `2 ${badRequestMessages.minLength} "Режиссер"`],
     },
     duration: {
       type: Number,
@@ -20,6 +21,7 @@ const movieSchema = new mongoose.Schema(
     year: {
       type: String,
       required: [true, `"Год" ${badRequestMessages.required}`],
+      minlength: [4, `4 ${badRequestMessages.minLength} "Год"`],
     },
     description: {
       type: String,

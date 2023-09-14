@@ -1,5 +1,11 @@
 const escape = require('escape-html');
 const Movie = require('../models/movies');
+const { NotFound, Forbiden, BadRequest } = require('../Errors');
+const {
+  notfoundMessages,
+  forbidenMessages,
+  badRequestMessages,
+} = require('../variables/errorMessages');
 
 module.exports.getAllMovies = (req, res) => {
   Movie.find({})
@@ -38,6 +44,22 @@ module.exports.createMovie = (req, res) => {
     res.send(movie);
   });
 };
-module.exports.deleteMovie = (req, res) => {
-  res.send({ message: 'movie deleted' });
+module.exports.deleteMovie = (req, res, next) => {
+  const { _id } = req.user;
+  const movieId = req.params.id;
+  Movie.findById(movieId)
+    .orFail(new NotFound(notfoundMessages.movieIsAbsent))
+    .then((movie) => {
+      if (movie.owner.toString() === _id) {
+        Movie.deleteOne(movie).then(res.send('Фильм удален'));
+      } else {
+        throw new Forbiden(forbidenMessages.itIsntYour);
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequest(badRequestMessages.incorrectId));
+      }
+      next(err);
+    });
 };

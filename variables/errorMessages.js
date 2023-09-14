@@ -3,6 +3,7 @@ const conflictMessages = {
 };
 const notfoundMessages = {
   userIsAbsent: 'Такого пользователя не существует',
+  movieIsAbsent: 'Такого фильма не существует',
 };
 const badRequestMessages = {
   maxLength: 'символа - это максимальная длина поля',
@@ -11,11 +12,16 @@ const badRequestMessages = {
   idIsWrong: 'Такого пользователя не существует',
   incorrectEmail: 'Не корректный email',
   incorrectURL: 'Не корректный URL',
+  incorrectId: 'Не корректный id',
 };
 const serverErrorMessage = 'На сервере произошла ошибка';
 
 const unAuthorizedMessages = {
   wrongData: 'Не корректные почта или пароль',
+};
+
+const forbidenMessages = {
+  itIsntYour: 'Запрещено удалять чужие фмльмы',
 };
 
 module.exports = {
@@ -24,4 +30,5 @@ module.exports = {
   badRequestMessages,
   serverErrorMessage,
   unAuthorizedMessages,
+  forbidenMessages,
 };

@@ -23,5 +23,13 @@ router.post(
   }),
   createMovie,
 );
-router.delete('/:id', deleteMovie);
+router.delete(
+  '/:id',
+  celebrate({
+    params: Joi.object().keys({
+      id: Joi.string().length(24).hex().required(),
+    }),
+  }),
+  deleteMovie,
+);
 module.exports = router;

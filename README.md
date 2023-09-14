@@ -37,7 +37,7 @@
 
 1. Клонировать репозиторий:
    - В терминале зайти в папку для клонирования и набрать команду:<br>
-     `git@github.com:Andrey1079/movies-explorer-api.git`
+     `git clone git@github.com:Andrey1079/movies-explorer-api.git`
 2. Установить зависимости:
 
 - В терминале зайти в папку с проетом и набрать:<br>

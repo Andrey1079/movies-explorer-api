@@ -3,10 +3,28 @@ const bcrypt = require('bcrypt');
 const escape = require('escape-html');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const { BadRequest, Conflict, NotFound } = require('../Errors');
+const {
+  conflictMessages,
+  notfoundMessages,
+  badRequestMessages,
+} = require('../variables/errorMessages');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
+
 module.exports.getMyInfo = (req, res, next) => {
-  res.send({ message: 'info sent' });
+  const { _id } = req.user;
+  User.findById({ _id })
+    .orFail(new NotFound(notfoundMessages.userIsAbsent))
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequest(badRequestMessages.idIsWrong));
+      }
+      next(err);
+    });
 };
 
 module.exports.changeMyInfo = (req, res, next) => {
@@ -44,6 +62,16 @@ module.exports.createUser = (req, res, next) => {
           _id: user._id,
         });
       })
-      .catch(next);
+      .catch((err) => {
+        if (err.name === 'ValidationError') {
+          next(new BadRequest(err.message));
+          return;
+        }
+        if (err.code === 11000) {
+          next(new Conflict(conflictMessages.alreadyExists));
+          return;
+        }
+        next(err);
+      });
   });
 };

@@ -10,11 +10,11 @@ module.exports = (req, res, next) => {
   }
   const token = authorization.replace('Bearer ', '');
   let payload;
-  console.log(payload);
   try {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : '123456789');
   } catch (err) {
     next(err);
   }
   req.user = payload;
+  next();
 };

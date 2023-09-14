@@ -2,29 +2,30 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const UnAuthorized = require('../Errors');
+const { badRequestMessages, unAuthorizedMessages } = require('../variables/errorMessages');
 
 const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
       unique: true,
-      required: [true, 'Поле "email" должно быть заполнено'],
+      required: [true, `"email" ${badRequestMessages.required}`],
       validate: {
         validator: (v) => validator.isEmail(v),
-        message: 'Не корректный email',
+        message: badRequestMessages.incorrectEmail,
       },
-      minlength: [5, 'Минимальная длина поля "email" должно быть 5 символа'],
+      minlength: [5, `5 ${badRequestMessages.minLength} "email"`],
     },
     password: {
       type: String,
       select: false,
-      required: [true, 'Поле "password" должно быть заполнено'],
+      required: [true, `"password" ${badRequestMessages.required}`],
     },
     name: {
       type: String,
-      requred: [true, 'Поле "Имя" должно быть заполнено'],
-      minlength: [2, 'Минимальная длина поля "Имя" должно быть 2 символа'],
-      maxlength: [30, 'Максимальная длина поля "Имя" должно быть 30 символа'],
+      requred: [true, `"Имя" ${badRequestMessages.required}`],
+      minlength: [2, `2 ${badRequestMessages.minLength} "Имя"`],
+      maxlength: [30, `30 ${badRequestMessages.minLength} "Имя"`],
     },
   },
   { versionKey: false },
@@ -35,11 +36,11 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
     .select('+password')
     .then((user) => {
       if (!user) {
-        throw new UnAuthorized('Неверные почта или пароль');
+        throw new UnAuthorized(unAuthorizedMessages.wrongData);
       }
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          throw new UnAuthorized('Неверные почта или пароль');
+          throw new UnAuthorized(unAuthorizedMessages.wrongData);
         }
         return user;
       });

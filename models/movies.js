@@ -1,43 +1,45 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const { badRequestMessages } = require('../variables/errorMessages');
 
 const movieSchema = new mongoose.Schema(
   {
     country: {
       type: String,
-      required: [true, 'Поле "Страна" должно быть заполнено (mongo)'],
+      required: [true, `"Страна" ${badRequestMessages.required}`],
+      minlength: [3, `3 ${badRequestMessages.minLength} "Страна"`],
     },
     director: {
       type: String,
-      required: [true, 'Поле "Режиссер" должно быть заполнено (mongo)'],
+      required: [true, `"Режиссер" ${badRequestMessages.required}`],
     },
     duration: {
       type: Number,
-      required: [true, 'Поле "Продолжительность" должно быть заполнено (mongo)'],
+      required: [true, `"Продолжительность" ${badRequestMessages.required}`],
     },
     year: {
       type: String,
-      required: [true, 'Поле "Год" должно быть заполнено (mongo)'],
+      required: [true, `"Год" ${badRequestMessages.required}`],
     },
     description: {
       type: String,
-      required: [true, 'Поле "Описание" должно быть заполнено (mongo)'],
-      minlength: [10, 'Минимальная длина поля "Описание" должно быть 10 символов (mongo)'],
+      required: [true, `"Описание" ${badRequestMessages.required}`],
+      minlength: [10, `3 ${badRequestMessages.minLength} "Описание"`],
     },
     image: {
       type: String,
-      required: [true, 'Поле "Ссылка на постер" должно быть заполнено (mongo)'],
-      validate: { validator: (v) => validator.isURL(v), message: 'Некорректный URL (validator)' },
+      required: [true, `"Ссылка на постер" ${badRequestMessages.required}`],
+      validate: { validator: (v) => validator.isURL(v), message: badRequestMessages.incorrectURL },
     },
     trilerLink: {
       type: String,
-      required: [true, 'Поле "Ссылка на трейлер" должно быть заполнено (mongo)'],
-      validate: { validator: (v) => validator.isURL(v), message: 'Некорректный URL (validator)' },
+      required: [true, `"Ссылка на трейлер" ${badRequestMessages.required}`],
+      validate: { validator: (v) => validator.isURL(v), message: badRequestMessages.incorrectURL },
     },
     thumbnail: {
       type: String,
-      required: [true, 'Поле "Миниатюрное изображение к фильму" должно быть заполнено (mongo)'],
-      validate: { validator: (v) => validator.isURL(v), message: 'Некорректный URL (validator)' },
+      required: [true, `"Миниатюрное изображение к фильму" ${badRequestMessages.required}`],
+      validate: { validator: (v) => validator.isURL(v), message: badRequestMessages.incorrectURL },
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -49,20 +51,16 @@ const movieSchema = new mongoose.Schema(
 
     nameRU: {
       type: String,
-      required: [true, 'Поле "Название на русском языке" должно быть заполнено (mongo)'],
-      minlength: [
-        10,
-        'Минимальная длина поля "Название на русском языке" должно быть 2 символа (mongo)',
-      ],
+      required: [true, `"Название на русском языке" ${badRequestMessages.required}`],
+      minlength: [2, `2 ${badRequestMessages.minLength} "Название на русском языке"`],
     },
     nameEN: {
       type: String,
-      required: [true, 'Поле "Название на английском языке" должно быть заполнено (mongo)'],
-      minlength: [
-        10,
-        'Минимальная длина поля "Название на английском языке" должно быть 2 символа (mongo)',
-      ],
+      required: [true, `"Название на английском языке" ${badRequestMessages.required}`],
+      minlength: [2, `2 ${badRequestMessages.minLength} "Название на английском языке"`],
     },
   },
   { versionKey: false },
 );
+
+module.exports = mongoose.model('movie', movieSchema);

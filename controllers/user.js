@@ -4,11 +4,7 @@ const escape = require('escape-html');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const { BadRequest, Conflict, NotFound } = require('../Errors');
-const {
-  conflictMessages,
-  notfoundMessages,
-  badRequestMessages,
-} = require('../variables/errorMessages');
+const { conflictMessages, notfoundMessages } = require('../variables/errorMessages');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 

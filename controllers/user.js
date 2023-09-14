@@ -1,8 +1,8 @@
 const httpConstants = require('http2').constants;
 const bcrypt = require('bcrypt');
 const escape = require('escape-html');
-const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 const { BadRequest, Conflict, NotFound } = require('../Errors');
 const { conflictMessages, notfoundMessages } = require('../variables/errorMessages');
 
@@ -38,11 +38,9 @@ module.exports.signIn = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : '123456789',
-        { expiresIn: '7d' },
-      );
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : '123456789', {
+        expiresIn: '7d',
+      });
       res.send(token);
     })
     .catch(next);

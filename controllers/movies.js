@@ -2,7 +2,9 @@ const escape = require('escape-html');
 const Movie = require('../models/movies');
 
 module.exports.getAllMovies = (req, res) => {
-  res.send({ message: 'allMovies' });
+  Movie.find({})
+    .populate('owner')
+    .then((movies) => res.send(movies));
 };
 module.exports.createMovie = (req, res) => {
   const { _id } = req.user;

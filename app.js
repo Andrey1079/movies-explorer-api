@@ -1,4 +1,5 @@
 const procces = require('process');
+const { dbUrl, port } = require('./variables/devServerConfig');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -10,7 +11,7 @@ const { requestLogger, errorLoger } = require('./middlewares/loger');
 
 const app = express();
 
-const { PORT = '3000', DB_URL = 'mongodb://127.0.0.1:27017/bitfilmsdb ' } = procces.env;
+const { PORT = port, DB_URL = dbUrl } = procces.env;
 mongoose.connect(DB_URL, {
   useNewUrlParser: true,
 });

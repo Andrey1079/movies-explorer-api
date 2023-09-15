@@ -25,20 +25,25 @@ module.exports.getMyInfo = async (req, res, next) => {
   }
 };
 
-module.exports.changeMyInfo = (req, res, next) => {
-  const { _id } = req.user;
+module.exports.changeMyInfo = async (req, res, next) => {
+  // const { _id } = req.user;
+  const _id = '6503b6f9291628443f9cfa67';
   if (req.body.name) req.body.name = escape(req.body.name);
-  User.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true })
-    .orFail(new NotFound(notfoundMessages.userIsAbsent))
-    .then((user) => {
-      res.send(user);
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequest(err.message));
-      }
+  try {
+    const user = await User.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true });
+    if (!user) {
+      throw new NotFound(notfoundMessages.userIsAbsent);
+    }
+    res.send(user);
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      next(new BadRequest(err.message));
+    } else if (err.name === 'CastError') {
+      next(new BadRequest(badRequestMessages.incorrectId));
+    } else {
       next(err);
-    });
+    }
+  }
 };
 
 module.exports.signIn = (req, res, next) => {

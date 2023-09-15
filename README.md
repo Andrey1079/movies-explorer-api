@@ -57,3 +57,7 @@
 ### Ссылка на репозиторий:
 
 https://github.com/Andrey1079/movies-explorer-api
+
+### Адрес api:
+
+https://api.dunaev.nomoredomainsrocks.ru

@@ -21,7 +21,7 @@ const unAuthorizedMessages = {
 };
 
 const forbidenMessages = {
-  itIsntYour: 'Запрещено удалять чужие фмльмы',
+  itIsntYour: 'У вас нет прав на удаление данного фильма',
 };
 
 module.exports = {

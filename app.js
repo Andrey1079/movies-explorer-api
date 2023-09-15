@@ -1,17 +1,20 @@
 const procces = require('process');
-const { dbUrl, port } = require('./variables/devServerConfig');
+
 const express = require('express');
 const mongoose = require('mongoose');
+
 const bodyParser = require('body-parser');
 const celebrate = require('celebrate').errors;
 const helmet = require('helmet');
+
 const limiter = require('./utils/limiter');
+const { dbUrl, port } = require('./variables/devServerConfig');
 const error = require('./middlewares/errors');
 const { requestLogger, errorLoger } = require('./middlewares/loger');
 
-const app = express();
-
 const { PORT = port, DB_URL = dbUrl } = procces.env;
+
+const app = express();
 mongoose.connect(DB_URL, {
   useNewUrlParser: true,
 });

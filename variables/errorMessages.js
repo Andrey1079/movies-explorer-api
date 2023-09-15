@@ -4,6 +4,7 @@ const conflictMessages = {
 const notfoundMessages = {
   userIsAbsent: 'Такого пользователя не существует',
   movieIsAbsent: 'Такого фильма не существует',
+  pageNotFound: 'Такой страницы не существует',
 };
 const badRequestMessages = {
   maxLength: 'символа - это максимальная длина поля',

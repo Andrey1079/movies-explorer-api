@@ -19,9 +19,9 @@ module.exports.getMyInfo = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'CastError') {
       next(new BadRequest(badRequestMessages.incorrectId));
-    } else {
-      next(err);
+      return;
     }
+    next(err);
   }
 };
 
@@ -37,11 +37,13 @@ module.exports.changeMyInfo = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadRequest(err.message));
-    } else if (err.name === 'CastError') {
-      next(new BadRequest(badRequestMessages.incorrectId));
-    } else {
-      next(err);
+      return;
     }
+    if (err.name === 'CastError') {
+      next(new BadRequest(badRequestMessages.incorrectId));
+      return;
+    }
+    next(err);
   }
 };
 
@@ -58,32 +60,34 @@ module.exports.signIn = async (req, res, next) => {
   }
 };
 
-module.exports.createUser = (req, res, next) => {
+module.exports.createUser = async (req, res, next) => {
   const { name, email, password } = req.body;
+  try {
+    const hash = await bcrypt.hash(password, 16);
 
-  bcrypt.hash(password, 16).then((hash) => {
-    User.create({
-      name: name ? escape(name) : email,
-      email,
-      password: hash,
-    })
-      .then((user) => {
-        res.status(httpConstants.HTTP_STATUS_CREATED).send({
-          name: user.name,
-          email: user.email,
-          _id: user._id,
-        });
-      })
-      .catch((err) => {
-        if (err.name === 'ValidationError') {
-          next(new BadRequest(err.message));
-          return;
-        }
-        if (err.code === 11000) {
-          next(new Conflict(conflictMessages.alreadyExists));
-          return;
-        }
-        next(err);
+    try {
+      const user = await User.create({
+        name: name ? escape(name) : email,
+        email,
+        password: hash,
       });
-  });
+      res.status(httpConstants.HTTP_STATUS_CREATED).send({
+        name: user.name,
+        email: user.email,
+        _id: user._id,
+      });
+    } catch (err) {
+      if (err.name === 'ValidationError') {
+        next(new BadRequest(err.message));
+        return;
+      }
+      if (err.code === 11000) {
+        next(new Conflict(conflictMessages.alreadyExists));
+        return;
+      }
+      next(err);
+    }
+  } catch (err) {
+    next(err);
+  }
 };

@@ -2,6 +2,5 @@ const router = require('express').Router();
 const { createUser } = require('../controllers/user');
 const { signUpValidation } = require('../middlewares/validator');
 
-router.use(signUpValidation);
-router.post('/signup', createUser);
+router.post('/signup', signUpValidation, createUser);
 module.exports = router;

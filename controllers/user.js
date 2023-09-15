@@ -44,6 +44,10 @@ module.exports.changeMyInfo = async (req, res, next) => {
       next(new BadRequest(badRequestMessages.incorrectId));
       return;
     }
+    if (err.code === 11000) {
+      next(new Conflict(conflictMessages.alreadyExists));
+      return;
+    }
     next(err);
   }
 };

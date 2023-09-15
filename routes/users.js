@@ -4,6 +4,5 @@ const { changeMyInfoValidation } = require('../middlewares/validator');
 
 router.get('/me', getMyInfo);
 
-router.use(changeMyInfoValidation);
-router.patch('/me', changeMyInfo);
+router.patch('/me', changeMyInfoValidation, changeMyInfo);
 module.exports = router;

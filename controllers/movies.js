@@ -7,9 +7,10 @@ const {
   badRequestMessages,
 } = require('../variables/errorMessages');
 
-module.exports.getAllMovies = async (req, res, next) => {
+module.exports.getMyMovies = async (req, res, next) => {
+  const { _id } = req.user;
   try {
-    const movies = await Movie.find({}).populate('owner');
+    const movies = await Movie.find({ owner: _id }).populate('owner');
     res.send(movies);
   } catch (err) {
     next(err);

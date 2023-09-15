@@ -4,18 +4,25 @@ const escape = require('escape-html');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { BadRequest, Conflict, NotFound } = require('../Errors');
-const { conflictMessages, notfoundMessages } = require('../variables/errorMessages');
+const { conflictMessages, notfoundMessages, badRequestMessages } = require('../variables/errorMessages');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-module.exports.getMyInfo = (req, res, next) => {
+module.exports.getMyInfo = async (req, res, next) => {
   const { _id } = req.user;
-  User.findById({ _id })
-    .orFail(new NotFound(notfoundMessages.userIsAbsent))
-    .then((user) => {
-      res.send(user);
-    })
-    .catch(next);
+  try {
+    const user = await User.findById({ _id });
+    if (!user) {
+      throw new NotFound(notfoundMessages.userIsAbsent);
+    }
+    res.send(user);
+  } catch (err) {
+    if (err.name === 'CastError') {
+      next(new BadRequest(badRequestMessages.incorrectId));
+    } else {
+      next(err);
+    }
+  }
 };
 
 module.exports.changeMyInfo = (req, res, next) => {

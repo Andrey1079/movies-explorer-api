@@ -26,8 +26,7 @@ module.exports.getMyInfo = async (req, res, next) => {
 };
 
 module.exports.changeMyInfo = async (req, res, next) => {
-  // const { _id } = req.user;
-  const _id = '6503b6f9291628443f9cfa67';
+  const { _id } = req.user;
   if (req.body.name) req.body.name = escape(req.body.name);
   try {
     const user = await User.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true });
@@ -46,16 +45,17 @@ module.exports.changeMyInfo = async (req, res, next) => {
   }
 };
 
-module.exports.signIn = (req, res, next) => {
+module.exports.signIn = async (req, res, next) => {
   const { email, password } = req.body;
-  User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : '123456789', {
-        expiresIn: '7d',
-      });
-      res.send(token);
-    })
-    .catch(next);
+  try {
+    const user = await User.findUserByCredentials(email, password);
+    const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : '123456789', {
+      expiresIn: '7d',
+    });
+    res.send(token);
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports.createUser = (req, res, next) => {

@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const celebrate = require('celebrate').errors;
 const helmet = require('helmet');
+const cors = require('cors');
 
 const limiter = require('./utils/limiter');
 const { dbUrl, port } = require('./variables/devServerConfig');
@@ -22,6 +23,8 @@ app.use(requestLogger);
 app.use(limiter);
 app.use(helmet());
 app.use(bodyParser.json());
+
+app.use(cors()); // настроить заголовки после разработки фронта
 
 app.use('/', require('./routes'));
 

@@ -4,17 +4,18 @@ const escape = require('escape-html');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { BadRequest, Conflict, NotFound } = require('../Errors');
-const { conflictMessages, notfoundMessages, badRequestMessages } = require('../variables/errorMessages');
+const {
+  conflictMessages,
+  notfoundMessages,
+  badRequestMessages,
+} = require('../variables/errorMessages');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.getMyInfo = async (req, res, next) => {
   const { _id } = req.user;
   try {
-    const user = await User.findById({ _id });
-    if (!user) {
-      throw new NotFound(notfoundMessages.userIsAbsent);
-    }
+    const user = await User.findById({ _id }).orFail(new NotFound(notfoundMessages.userIsAbsent));
     res.send(user);
   } catch (err) {
     if (err.name === 'CastError') {
@@ -29,10 +30,10 @@ module.exports.changeMyInfo = async (req, res, next) => {
   const { _id } = req.user;
   if (req.body.name) req.body.name = escape(req.body.name);
   try {
-    const user = await User.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true });
-    if (!user) {
-      throw new NotFound(notfoundMessages.userIsAbsent);
-    }
+    const user = await User.findByIdAndUpdate(_id, req.body, {
+      new: true,
+      runValidators: true,
+    }).orFail(new NotFound(notfoundMessages.userIsAbsent));
     res.send(user);
   } catch (err) {
     if (err.name === 'ValidationError') {
@@ -51,9 +52,13 @@ module.exports.signIn = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.findUserByCredentials(email, password);
-    const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : '123456789', {
-      expiresIn: '7d',
-    });
+    const token = jwt.sign(
+      { _id: user._id },
+      NODE_ENV === 'production' ? JWT_SECRET : '123456789',
+      {
+        expiresIn: '7d',
+      },
+    );
     res.send(token);
   } catch (err) {
     next(err);

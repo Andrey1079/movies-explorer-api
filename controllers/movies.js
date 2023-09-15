@@ -7,11 +7,18 @@ const {
   badRequestMessages,
 } = require('../variables/errorMessages');
 
-module.exports.getAllMovies = (req, res) => {
-  Movie.find({})
-    .populate('owner')
-    .then((movies) => res.send(movies));
+module.exports.getAllMovies = async (req, res, next) => {
+  try {
+    const movies = await Movie.find({}).populate('owner');
+    res.send(movies);
+  } catch (err) {
+    next(err);
+  }
 };
+//   Movie.find({})
+//     .populate('owner')
+//     .then((movies) => res.send(movies));
+// };
 module.exports.createMovie = (req, res) => {
   const { _id } = req.user;
   const {

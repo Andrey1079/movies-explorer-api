@@ -1,3 +1,7 @@
+const confirmationMessages = {
+  movieDeleted: 'Фильм удален',
+};
+
 const conflictMessages = {
   alreadyExists: 'Пользователь с таким Email уже существует',
 };
@@ -32,4 +36,5 @@ module.exports = {
   serverErrorMessage,
   unAuthorizedMessages,
   forbidenMessages,
+  confirmationMessages,
 };

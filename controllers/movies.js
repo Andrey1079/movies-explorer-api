@@ -5,7 +5,8 @@ const {
   notfoundMessages,
   forbidenMessages,
   badRequestMessages,
-} = require('../variables/errorMessages');
+  confirmationMessages,
+} = require('../variables/apiMessages');
 
 module.exports.getMyMovies = async (req, res, next) => {
   const { _id } = req.user;
@@ -62,7 +63,7 @@ module.exports.deleteMovie = async (req, res, next) => {
     if (movie.owner.toString() === _id) {
       try {
         await Movie.deleteOne(movie);
-        res.send('Фильм удален');
+        res.send(confirmationMessages.movieDeleted);
       } catch (err) {
         next(err);
       }

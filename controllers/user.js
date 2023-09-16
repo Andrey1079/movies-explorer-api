@@ -8,7 +8,7 @@ const {
   conflictMessages,
   notfoundMessages,
   badRequestMessages,
-} = require('../variables/errorMessages');
+} = require('../variables/apiMessages');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 

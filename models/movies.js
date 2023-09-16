@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const { badRequestMessages } = require('../variables/errorMessages');
+const { badRequestMessages } = require('../variables/apiMessages');
 
 const movieSchema = new mongoose.Schema(
   {

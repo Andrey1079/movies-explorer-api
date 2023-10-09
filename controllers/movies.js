@@ -63,7 +63,7 @@ module.exports.deleteMovie = async (req, res, next) => {
     if (movie.owner.toString() === _id) {
       try {
         await Movie.deleteOne(movie);
-        res.send(confirmationMessages.movieDeleted);
+        res.send({ message: confirmationMessages.movieDeleted });
       } catch (err) {
         next(err);
       }

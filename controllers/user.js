@@ -63,7 +63,7 @@ module.exports.signIn = async (req, res, next) => {
         expiresIn: '7d',
       },
     );
-    res.send(token);
+    res.send({ token });
   } catch (err) {
     next(err);
   }

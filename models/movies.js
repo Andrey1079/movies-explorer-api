@@ -33,7 +33,7 @@ const movieSchema = new mongoose.Schema(
       required: [true, `"Ссылка на постер" ${badRequestMessages.required}`],
       validate: { validator: (v) => validator.isURL(v), message: badRequestMessages.incorrectURL },
     },
-    trilerLink: {
+    trailerLink: {
       type: String,
       required: [true, `"Ссылка на трейлер" ${badRequestMessages.required}`],
       validate: { validator: (v) => validator.isURL(v), message: badRequestMessages.incorrectURL },
